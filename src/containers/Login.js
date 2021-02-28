@@ -3,7 +3,7 @@ import { Link, Redirect } from 'react-router-dom'
 import { connect } from 'react-redux';
 import { login } from '../actions/auth';
 
-export function Login({ login }) {
+export function Login({ login, isAuthenticated }) {
     const [formData, setFormData] = useState({
         email: '',
         password: ''
@@ -16,11 +16,15 @@ export function Login({ login }) {
     const onSubmit = e => {
         e.preventDefault();
 
-        login(email, password)
-    ;}
+        login(email, password);
+    }
 
     // Is the user authenticated?
     // Redirect them to the Home page
+    if (isAuthenticated) {
+        return <Redirect to='/' />
+    }
+
     return (
         <div className='container mt-5'>
             <h1>Sign In</h1>
@@ -61,8 +65,8 @@ export function Login({ login }) {
     );
 }
 
-// const mapStateToProps = state => ({
-//     // is authenticated?
-// })
+const mapStateToProps = state => ({
+    isAuthenticated: state.auth.isAuthenticated
+})
 
-export default connect(null, { login })(Login)
+export default connect(mapStateToProps, { login })(Login)
